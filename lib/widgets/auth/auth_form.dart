@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  AuthForm(this.submitFn);
+  AuthForm(this.submitFn, this.isLoading);
+
+  final bool isLoading;
 
   final void Function(
     String email,
@@ -95,23 +97,28 @@ class _AuthFormState extends State<AuthForm> {
                     obscureText: true,
                   ),
                   SizedBox(height: 12),
-                  ElevatedButton(
-                    child: Text(_isLogin ? 'Login' : 'Sign up'),
-                    onPressed: _trySubmit,
-                    // style: ButtonStyle(
-                    //   backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                    //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
-                    // ),
-                  ),
-                  TextButton(
-                    child: Text(_isLogin ? 'Create New Account' : 'I already have an account'),
-                    onPressed: () {
-                      setState(() {
-                        _isLogin = !_isLogin;
-                      });
-                    },
-                  )
+                  // Display the circularProgressIndicator is it's loading and don't display
+                  // the elevatedButton / TextButton if it IS loading
+                  if (widget.isLoading) CircularProgressIndicator(),
+                  if (!widget.isLoading)
+                    ElevatedButton(
+                      child: Text(_isLogin ? 'Login' : 'Sign up'),
+                      onPressed: _trySubmit,
+                      // style: ButtonStyle(
+                      //   backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                      //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+                      // ),
+                    ),
+                  if (!widget.isLoading)
+                    TextButton(
+                      child: Text(_isLogin ? 'Create New Account' : 'I already have an account'),
+                      onPressed: () {
+                        setState(() {
+                          _isLogin = !_isLogin;
+                        });
+                      },
+                    )
                 ],
               ),
             ),
